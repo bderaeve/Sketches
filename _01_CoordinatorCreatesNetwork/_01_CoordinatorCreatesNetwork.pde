@@ -1,9 +1,11 @@
 /*
  * This program sets up a coordinator to initialize a new network
+ *  If joined devices have error_TX = 1 or 2, check if they have the same
+ *  operating CHANNEL as the coordinator!
  */
 
 /**************************************************
-* IMPORTANT: Beware of the channel selected by the 
+* IMPORTANT: Beware of the CHANNEL selected by the 
 * coordinator because routers are not able to scan 
 * both 0x19 and 0x1A channels
 **************************************************/

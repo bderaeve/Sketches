@@ -55,24 +55,26 @@ void loop()
       USB.println("\nDevice enters loop");
       int er = 0;
     
-/*
+
       sendMessageLocal("TEST MESSAGE", DEST_MAC_ADDRESS);    //WORKS / HAS WORKED
       delay(1000);
       
       COMM.sendMessageLocalWorking("TEST MESSAGE 2", DEST_MAC_ADDRESS);    //WORKS / HAS WORKED
       delay(1000);
-      
+
       COMM.sendMessage(dest, IO_DATA, "TEST MESSAGE 3");    //WORKS / HAS WORKED
       delay(1000);
 
       PAQ.testComm(dest, IO_DATA, "TEST MESSAGE 4");    //WORKS / HAS WORKED 
       delay(1000); 
-      */
+
+      // FROM THE MOMENT YOU ENABLE THE NEXT FUNCTION THE WHOLE THING CRASHES:
       
-      PAQ.testComm2(dest, IO_DATA);
+      //PAQ.testComm2(dest, IO_DATA);
+      //delay(1000);
       
-      //PAQ.testComm3(dest, IO_DATA, "TEST MESSAGE 1302");  
-      delay(1000); 
+      //PAQ.testComm3(dest, IO_DATA, "TEST MESSAGE 5");  
+      //delay(1000); 
       
       er = SensUtils.measureSensors(xbeeZB.activeSensorMask);
       if( er!= 0)
@@ -90,10 +92,7 @@ void loop()
            USB.println(er);
       }
       */
-      
-      
 
-     
 /* 
       er = COMM.sendMessage(dest, ERRORMESSAGE, "ERROR MESSAGE");
       if( er!= 0)
