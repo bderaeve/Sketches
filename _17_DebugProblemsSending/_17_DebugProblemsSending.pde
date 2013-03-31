@@ -25,16 +25,16 @@ void setup()
       USB.begin();
       USB.println("PROGRAM: SendAverageTemperature.pde\nUSB port started...");
       
-      //xbeeZB.init(ZIGBEE,FREQ2_4G,NORMAL);
-      //xbeeZB.ON();
-      //xbeeZB.wake();  // For end devices: SM=1!!!
-      //delay(3000);
+      xbeeZB.init(ZIGBEE,FREQ2_4G,NORMAL);
+      xbeeZB.ON();
+      xbeeZB.wake();  // For end devices: SM=1!!!
+      delay(3000);
       
-      if(COMM.setupXBee()) 
-          USB.println("ERROR SETTING UP XBEE MODULE");
+      //if(COMM.setupXBee()) 
+       //   USB.println("ERROR SETTING UP XBEE MODULE");
       
       // wait until XBee module is associated
-      //if(COMM.checkNodeAssociation()) USB.println("ERROR CHECKING NODE ASSOCIATION");    
+      if(COMM.checkNodeAssociation()) USB.println("ERROR CHECKING NODE ASSOCIATION");    
     
     
       /* 
@@ -86,7 +86,10 @@ void loop()
 */  
       //PAQ.testComm4("TEST MESSAGE", DEST_MAC_ADDRESS);
 
-      PAQ.testComm5("TEST MESSAGE", IO_DATA, DEST_MAC_ADDRESS);
+      //ENABLING THE USB.PRINT AFTER COMM.SEND IN THIS FUNCTION MAKES THE WHOLE PROGRAM CRASH
+      //PAQ.testComm5("TEST MESSAGE", IO_DATA, DEST_MAC_ADDRESS);
+      
+      //PAQ.testComm6();
 /*
       PAQ.testComm(dest, IO_DATA, "TEST MESSAGE");    //WORKS / HAS WORKED 
       delay(1000); 
@@ -99,23 +102,23 @@ void loop()
       //PAQ.testComm3(dest, IO_DATA, "TEST MESSAGE 5");  
       //delay(1000); 
       
-/*
+
       er = SensUtils.measureSensors(xbeeZB.activeSensorMask);
       if( er!= 0)
       {
            USB.print("ERROR SensUtils.measureSensors(uint16_t *) returns: ");
            USB.println(er);
       }
-*/  
+
    
-     /* 
+   
       er = PAQ.sendMeasuredSensors(dest, xbeeZB.activeSensorMask);
       if( er!= 0)
       {
            USB.print("ERROR PAQ.sendMeasuredSensors(uint16_t *) returns: ");
            USB.println(er);
       }
-      */
+ 
 
 /* 
       er = COMM.sendMessage(dest, ERRORMESSAGE, "ERROR MESSAGE");

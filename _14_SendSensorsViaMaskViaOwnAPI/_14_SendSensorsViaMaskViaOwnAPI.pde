@@ -26,11 +26,18 @@ void setup()
       USB.println("PROGRAM: SendAverageTemperature.pde\nUSB port started...");
       
       xbeeZB.init(ZIGBEE,FREQ2_4G,NORMAL);
+      USB.println("After xbeeZB.init");
+      
       xbeeZB.ON();
+      USB.println("After xbeeZB.ON");
       xbeeZB.wake();  // For end devices: SM=1!!!
+      USB.println("After xbeeZB.wake");
       delay(3000);
       
       // Suppose network parameters are OK!
+      // TRY:
+      if(COMM.setupXBee()) 
+          USB.println("ERROR SETTING UP XBEE MODULE");
 
       // wait until XBee module is associated
       if(COMM.checkNodeAssociation()) USB.println("ERROR CHECKING NODE ASSOCIATION");    
@@ -80,14 +87,14 @@ void loop()
       }
       
    
-     /* 
+     
       er = PAQ.sendMeasuredSensors(dest, xbeeZB.activeSensorMask);
       if( er!= 0)
       {
            USB.print("ERROR PAQ.sendMeasuredSensors(uint16_t *) returns: ");
            USB.println(er);
       }
-      */
+      
 
 /* 
       er = COMM.sendMessage(dest, ERRORMESSAGE, "ERROR MESSAGE");
