@@ -29,13 +29,10 @@ void loop()
      COMM.sendMessageLocalWorking("TEST MESSAGE", DEST_MAC_ADDRESS);    //WORKS / HAS WORKED
      delay(1000);
      
-     Pack.testPrinter();
-     
-     //PAQ.testPrinten();
-     //SensUtils.testPrint();
-     //COMM.testenPrinten();
-     
-     //xbeeZB.tester();
+     PackUtils.testPrinting();
+     SensUtils.testPrinting();
+     COMM.testPrinting();
+     xbeeZB.testPrinting();
      
      //PAQ.testComm7();
      
