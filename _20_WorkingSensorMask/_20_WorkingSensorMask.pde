@@ -39,7 +39,7 @@ void loop()
      
       PackUtils.testPrinting();
       SensUtils.testPrinting();
-      COMM.testPrinting();
+      //COMM.testPrinting();
       xbeeZB.testPrinting();
      
       er = SensUtils.measureSensors(xbeeZB.activeSensorMask);

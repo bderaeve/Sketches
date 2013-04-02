@@ -46,9 +46,6 @@ void setup()
       xbeeZB.wake();  // For end devices: SM=1!!!
       delay(3000);
       
-      
-      
-
       /* Suppose network parameters are OK! (However: MUST BE DONE IN ORDER TO COME IN VALID ASSOCIATION STATE AFTER SLEEP)
       if(!xbeeZB.setPAN(panid)) USB.println("setPAN ok");
       else USB.println("setPAN error");
