@@ -17,13 +17,13 @@ long previous = 0;
 
 uint16_t sortedTimes[4] = {20, 25, 60, 100};
 
-char* sleepTime = "00:00:01:00";   
+char * sleepTime = "00:00:00:10";   
 
 void setup()
-{
+{	
       // Checks if we come from a normal reset or a hibernate reset
       PWR.ifHibernate();
-      
+
       // When out of hibernate: REDUCED SETUP, disable flag and goto loop()
       if( intFlag & HIB_INT )
       {
@@ -32,6 +32,11 @@ void setup()
           
           previous=millis();
           USB.print("\ntime"); USB.println(previous);
+          USB.print("\n");
+    
+          RTC.setAlarm1(0,0,0,40, RTC_OFFSET,RTC_ALM1_MODE3); // Sets Alarm1
+          USB.print("Alarm1 ="); USB.println(RTC.getAlarm1());
+          
           xbeeZB.init(ZIGBEE,FREQ2_4G,NORMAL);
           xbeeZB.ON();
           xbeeZB.wake(); 
@@ -47,10 +52,52 @@ void setup()
               USB.println("ERROR SETTING UP XBEE MODULE");
           
           // "year:month:date:nrDayOfWeek:hour:minute:second - day 1 = Sunday"
-          RTC.setTime("13:04:02:03:08:00:00");
-          //RTC.setTime(13,4,2,2,8,29,0); 
+          RTC.setTime("13:04:04:05:15:00:00");
+          USB.println(RTC.getTime());
           
+          //RTC.setTime("13:04:00:00:00:00:00");
+          RTCUt.getTime();
+          
+          RTCUt.setNextTimeWhenToWakeUpViaOffset(4);
+          
+          
+          //RTC.setTime(13,4,2,2,8,29,0); 
+          //USB.print("RTC time = "); 
+          //USB.println(RTC.getTime());
+          
+        
+          /*
           //RTC.setAlarm1(0,0,0,30,RTC_OFFSET,RTC_ALM1_MODE2);
+          RTC.setAlarm1(0,0,0,50, RTC_OFFSET,RTC_ALM1_MODE3); // Sets Alarm1
+          USB.print("\nAlarm1 ="); USB.println(RTC.getAlarm1());
+          RTCUt.convertAlarm1ToInt();
+          USB.println( (int) RTCUt.Alarm1int );
+          
+          RTC.setAlarm1(0,0,1,0, RTC_OFFSET,RTC_ALM1_MODE3); // Sets Alarm1
+          USB.print("\nAlarm1 ="); USB.println(RTC.getAlarm1());
+          RTCUt.convertAlarm1ToInt();
+          USB.println( (int) RTCUt.Alarm1int );
+          
+          RTC.setAlarm1(0,0,10,0, RTC_OFFSET,RTC_ALM1_MODE3); // Sets Alarm1
+          USB.print("\nAlarm1 ="); USB.println(RTC.getAlarm1());
+          RTCUt.convertAlarm1ToInt();
+          USB.println( (int) RTCUt.Alarm1int );
+          
+          RTC.setAlarm1(0,0,1,10, RTC_OFFSET,RTC_ALM1_MODE3); // Sets Alarm1
+          USB.print("\nAlarm1 ="); USB.println(RTC.getAlarm1());
+          RTCUt.convertAlarm1ToInt();
+          USB.println( (int) RTCUt.Alarm1int );
+          
+          RTC.setAlarm1(0,1,0,0, RTC_OFFSET,RTC_ALM1_MODE3); // Sets Alarm1
+          USB.print("\nAlarm1 ="); USB.println(RTC.getAlarm1());
+          RTCUt.convertAlarm1ToInt();
+          USB.println( (int) RTCUt.Alarm1int );
+          
+          RTC.setAlarm1(0,1,1,0, RTC_OFFSET,RTC_ALM1_MODE3); // Sets Alarm1
+          USB.print("\nAlarm1 ="); USB.println(RTC.getAlarm1());
+          RTCUt.convertAlarm1ToInt();
+          USB.println( (int) RTCUt.Alarm1int );
+          */
           
           /* param1 = number of sensors to measurePossible input:
            * other params can be: TEMPERATURE, HUMIDITY, PRESSURE, BATTERY, CO2, ANEMO, VANE , PLUVIO
@@ -61,17 +108,27 @@ void setup()
 
 void loop()
 {
-      COMM.checkNodeAssociation(LOOP);
-      previous=millis();
-      USB.print("\ntime"); USB.println(previous);
-  
       int er = 0;
+      
+      er = COMM.checkNodeAssociation(LOOP);
+      if( er!= 0)
+      {
+         USB.print("ERROR COMM.checkNodeAssociation(LOOP) returns: ");
+         USB.println(er);
+      }
+      
+      previous=millis();
+      USB.print("\ntime\n"); USB.println(previous);
+      
+      USB.print("\nTimeRTC: ");
+      USB.println(RTC.getTime());
+
       USB.println("\ndevice enters loop\n");
 
       //xbeeZB.setActiveSensorMask(3, TEMPERATURE, BATTERY, HUMIDITY);  
       xbeeZB.printSensorMask(xbeeZB.activeSensorMask);
 
-      xbeeZB.createAndSaveNewTime2SleepArray(0, sortedTimes);
+      //xbeeZB.createAndSaveNewTime2SleepArray(sortedTimes);
       
       er = SensUtils.measureSensors(xbeeZB.activeSensorMask);
       if( er!= 0)
@@ -80,7 +137,6 @@ void loop()
          USB.println(er);
       }
      
-      
      
       er = PackUtils.sendMeasuredSensors(dest, xbeeZB.activeSensorMask);
       if( er!= 0)
