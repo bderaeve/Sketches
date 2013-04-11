@@ -1,0 +1,144 @@
+
+
+
+SensorUtils::measureTemperature() took  ms1102
+SensorUtils::measureHumidity() took  ms1104
+SensorUtils::measurePressure() took  ms1115
+SensorUtils::measureBattery()
+
+
+SensorUtils::measureTemperature() took  ms1104
+SensorUtils::measureHumidity() took  ms1105
+SensorUtils::measurePressure() took  ms1111
+SensorUtils::measureBattery()
+
+
+
+SensorUtils::measureTemperature() took  ms1102
+SensorUtils::measureHumidity() took  ms1105
+SensorUtils::measurePressure() took  ms1111
+SensorUtils::measureBattery()
+
+
+
+SensorUtils::measureTemperature() took  ms1104
+SensorUtils::measureHumidity() took  ms1104
+SensorUtils::measurePressure() took  ms1115
+SensorUtils::measureBattery()
+
+
+
+
+
+SensorUtils::measureTemperature() took  ms1106
+SensorUtils::measureHumidity() took  ms1102
+SensorUtils::measurePressure() took  ms1113
+SensorUtils::measureBattery()
+
+
+SensorUtils::measureHumidity() took  ms1102
+
+Turning on sensorBoard in uint8_t SensorUtils::measureSensors(uint16_t mask)
+SensorUtils::measureTemperature()
+17.7419376373
+20.0000000000
+21.6129035949
+23.2258052825
+24.5161323547
+24.1935482025
+24.1935482025
+25.4838676452
+26.7741947174
+27.4193534851
+no delay between measurements:
+26.4516105651
+27.7419376373
+27.7419376373
+26.4516105651
+26.4516105651
+27.0967712402
+27.7419376373
+26.7741947174
+26.1290340423
+26.7741947174
+SensorUtils::measureTemperature() took  ms1102
+SensorUtils::measureHumidity()
+23.4477977752
+23.2743625640
+22.9275016784
+23.6212272644
+22.9275016784
+22.9275016784
+23.2743625640
+22.9275016784
+23.2743625640
+23.4477977752
+no delay between measurements:
+23.1009368896
+23.4477977752
+23.2743625640
+23.1009368896
+22.9275016784
+23.1009368896
+23.2743625640
+23.4477977752
+23.2743625640
+23.1009368896
+SensorUtils::measureHumidity() took  ms1105
+SensorUtils::measurePressure()
+101.4381637573
+100.7050247192
+100.4606475830
+100.5828552246
+100.7050247192
+100.4606475830
+100.7050247192
+100.3384628295
+100.7050247192
+100.3384628295
+no delay between measurements:
+100.3384628295
+100.3384628295
+101.9269256591
+101.1937866210
+100.9494094848
+100.8272171020
+100.8272171020
+100.8272171020
+100.7050247192
+100.7050247192
+SensorUtils::measurePressure() took  ms1111
+SensorUtils::measureBattery()
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+no delay between measurements:
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+SensorUtils::measureBattery() took  ms1030
+i = 6677
+temp[0] = 26
+temp[1] = 21
+pressure = 100.7050247192
+
+
+A#usb started
+
+?
+
+

@@ -8,8 +8,9 @@ packetXBee* paq_sent;
 //end device B: mac address:0013A20040697379
 //gateway mac address:0013A2004069737A
 
-//Destination (Router C) MAC address
+Destination (Router C) MAC address
 char * DEST_MAC_ADDRESS = "0013A2004069737A";
+
 
  int  i = 0;
 void setup()
@@ -26,6 +27,7 @@ void setup()
       xbeeZB.wake();
       //delay(1000);
       
+      
       if(!xbeeZB.setPAN(panid)) USB.println("setPAN ok");
       else USB.println("setPAN error");
     
@@ -39,7 +41,8 @@ void setup()
       else USB.println("getAssociationIndication error");
     
       xbeeZB.writeValues();
-     
+      
+      
       // wait until XBee module is associated
       while(xbeeZB.associationIndication != 0)
       {
@@ -65,7 +68,7 @@ void loop()
       
       sendMessage(data, DEST_MAC_ADDRESS);
       
-      waitingAnswer();
+      //waitingAnswer();
       
       i++;
       delay(1000);

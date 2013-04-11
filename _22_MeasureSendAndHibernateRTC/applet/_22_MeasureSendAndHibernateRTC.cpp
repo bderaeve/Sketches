@@ -34,8 +34,8 @@ void setup()
           USB.print("\ntime"); USB.println(previous);
           USB.print("\n");
     
-          RTC.setAlarm1(0,0,0,40, RTC_OFFSET,RTC_ALM1_MODE3); // Sets Alarm1
-          USB.print("Alarm1 ="); USB.println(RTC.getAlarm1());
+          //RTC.setAlarm1(0,0,0,40, RTC_OFFSET,RTC_ALM1_MODE3); // Sets Alarm1
+          //USB.print("Alarm1 ="); USB.println(RTC.getAlarm1());
           
           xbeeZB.init(ZIGBEE,FREQ2_4G,NORMAL);
           xbeeZB.ON();
@@ -102,20 +102,14 @@ void setup()
           /* param1 = number of sensors to measurePossible input:
            * other params can be: TEMPERATURE, HUMIDITY, PRESSURE, BATTERY, CO2, ANEMO, VANE , PLUVIO
            */    
-          xbeeZB.setActiveSensorMask(4, TEMPERATURE, BATTERY, HUMIDITY, PRESSURE);  
+          xbeeZB.setActiveSensorMask(4, TEMPERATURE, BATTERY, HUMIDITY, PRESSURE);
+          xbeeZB.setActiveSensorTimes(4, 30, 20, 50, 100);
       }  
 }
 
 void loop()
 {
       int er = 0;
-      
-      er = COMM.checkNodeAssociation(LOOP);
-      if( er!= 0)
-      {
-         USB.print("ERROR COMM.checkNodeAssociation(LOOP) returns: ");
-         USB.println(er);
-      }
       
       previous=millis();
       USB.print("\ntime\n"); USB.println(previous);
@@ -126,7 +120,7 @@ void loop()
       USB.println("\ndevice enters loop\n");
 
       //xbeeZB.setActiveSensorMask(3, TEMPERATURE, BATTERY, HUMIDITY);  
-      xbeeZB.printSensorMask(xbeeZB.activeSensorMask);
+      //xbeeZB.printSensorMask(xbeeZB.activeSensorMask);
 
       //xbeeZB.createAndSaveNewTime2SleepArray(sortedTimes);
       
@@ -136,8 +130,19 @@ void loop()
          USB.print("ERROR SensUtils.measureSensors(uint16_t *) returns: ");
          USB.println(er);
       }
-     
-     
+      
+      previous=millis();
+      USB.print("\nEndMeasuring, start check association\n"); USB.println(previous);     
+      er = COMM.checkNodeAssociation(LOOP);
+      if( er!= 0)
+      {
+         USB.print("ERROR COMM.checkNodeAssociation(LOOP) returns: ");
+         USB.println(er);
+      }     
+      
+      previous=millis();
+      USB.print("\nEndassociation\n"); USB.println(previous);   
+      
       er = PackUtils.sendMeasuredSensors(dest, xbeeZB.activeSensorMask);
       if( er!= 0)
       {
@@ -145,6 +150,9 @@ void loop()
            USB.println(er);
           
       }
+      
+      previous=millis();
+      USB.print("\ntime\n at hibernate"); USB.println(previous);
 
 
       ////////////////////////////////////////////////
