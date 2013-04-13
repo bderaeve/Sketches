@@ -1,6 +1,8 @@
 /*
- *  Test program for enabling and sending different sensors
- *    STATE = stable (it gives transmission error = 2 but does send the correct values)
+ *  Test program for sending requests to End Devices
+ *    When the device is in sleep/hibernate the sending devices gets TX = 1
+ *    To be able to change frequencies in end devices, it will listen for commands for a fixed, limited
+ *    time after sending its values. If the gateway has commands it will send them only at that moment.
  */
 
 //BJORN

@@ -5,9 +5,8 @@ char*  data="Message count:  \r\n";
 
 //BJORN
 uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
-uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x77 };    //Node D
+uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x77 };     //Node D
 uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
-
 
 
 //ROEL
@@ -20,6 +19,10 @@ uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
 //int  i = 0;
 
 
+unsigned char ar1[3] = {0x00, 0x0, 0x07};  //TEST ADD_NODE_REQ = OK
+//unsigned char ar2[3] = {0x00, 0x00, 0};    //TEST MASK_REQ = 
+
+
 void setup()
 {
       // setup for Serial port over USB
@@ -28,7 +31,7 @@ void setup()
       USB.println(freeMemory());
   
       if( COMM.setupXBee(panID, gateway, "NodeD") ) 
-          USB.println("ERROR SETTING UP XBEE MODULE");
+          USB.println("\nERROR SETTING UP XBEE MODULE\n");
       USB.println(freeMemory());
 }
 
@@ -56,15 +59,23 @@ void loop()
        *            1 : error_TX = 1
        *            2 : error_TX = 2
        */
-       unsigned char ar[3] = {0x01, 0x03, 0};
-      er = COMM.sendMessage(dest, ADD_NODE_REQ, (char *) ar);
-      if( er!= 0 )
-      {
-         USB.print("ERROR COMM.sendMessage() returns: ");
-         USB.println(er); 
-      }
+       er = COMM.sendMessage(dest, ADD_NODE_REQ, (char *) ar1);
+       if( er!= 0 )
+       {
+          USB.print("ERROR COMM.sendMessage() returns: ");
+          USB.println(er); 
+       }       
+       
+       /*
+       er = COMM.sendMessage(dest, MASK_REQ, (char *) ar2);
+       if( er!= 0 )
+       {
+          USB.print("ERROR COMM.sendMessage() returns: ");
+          USB.println(er); 
+       }
+       */
       
-      delay(5000);
+       delay(5000);
 }
   
 

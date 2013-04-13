@@ -21,7 +21,7 @@ void setup()
           USB.println("usb started\n");
           USB.println(freeMemory());
       
-          if( COMM.setupXBee(panID) ) 
+          if( COMM.setupXBee(panID, dest, "Node") ) 
               USB.println("ERROR SETTING UP XBEE MODULE");
           USB.println(freeMemory());
           

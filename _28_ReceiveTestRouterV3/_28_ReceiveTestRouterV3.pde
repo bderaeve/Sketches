@@ -6,7 +6,7 @@
  */
 
 //BJORN
-uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
+uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
 uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
 long previous = 0;
 
@@ -21,8 +21,9 @@ void setup()
           USB.println("usb started\n");
           USB.println(freeMemory());
       
-          if( COMM.setupXBee(panID) ) 
-              USB.println("ERROR SETTING UP XBEE MODULE");
+          if( COMM.setupXBee(panID, 0, "NodeD") ) 
+          //if( COMM.setupXBee() ) 
+              USB.println("\nERROR SETTING UP XBEE MODULE\n");
           USB.println(freeMemory());
           
           // "year:month:date:nrDayOfWeek:hour:minute:second - day 1 = Sunday"
@@ -33,8 +34,9 @@ void setup()
           /* param1 = number of sensors to measurePossible input:
            * other params can be: TEMPERATURE, HUMIDITY, PRESSURE, BATTERY, CO2, ANEMO, VANE , PLUVIO
            */    
-          xbeeZB.setActiveSensorMask(4, TEMPERATURE, BATTERY, HUMIDITY, PRESSURE);
-          xbeeZB.setActiveSensorTimes(4, 30, 20, 50, 100);
+          //xbeeZB.setActiveSensorMask(4, TEMPERATURE, BATTERY, HUMIDITY, PRESSURE);
+          xbeeZB.setActiveSensorMask(1, BATTERY);
+          //xbeeZB.setActiveSensorTimes(4, 30, 20, 50, 100);
       
 }
 
@@ -57,6 +59,7 @@ void loop()
       
       //USB.println("measure");
       //USB.println(freeMemory());  // = 1811 B
+      USB.println( (int) xbeeZB.activeSensorMask );
       er = SensUtils.measureSensors(xbeeZB.activeSensorMask);
       if( er!= 0)
       {
@@ -87,12 +90,14 @@ void loop()
       
       //USB.println("send");
       //USB.println(freeMemory());  // = 1753 B
-      er = PackUtils.sendMeasuredSensors(dest, xbeeZB.activeSensorMask);
+      
+      er = PackUtils.sendMeasuredSensors(gateway, xbeeZB.activeSensorMask);
       if( er!= 0)
       {
            USB.print("ERROR PAQ.sendMeasuredSensors(uint16_t *) returns: ");
            USB.println(er);
       }
+      
       //USB.println(freeMemory());  // = 1753 B
       
       USB.println("receive");
