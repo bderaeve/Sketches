@@ -9,7 +9,11 @@ char*  data="Message count:  \r\n";
 
 
 //Destination (Router D) MAC address
-char * DEST_MAC_ADDRESS = "0013A20040697377";
+//char * DEST_MAC_ADDRESS = "0013A20040697377";
+
+//Destination (End Device B) MAC address
+char * DEST_MAC_ADDRESS = "0013A20040697379";
+
 int  i = 0;
 
 
@@ -42,7 +46,7 @@ void loop()
       //waitingAnswer();
       
       i++;
-      delay(10000);
+      delay(3000);
 }
   
 
