@@ -1,8 +1,8 @@
 packetXBee* paq_sent;
 int8_t state=0;
 long previous=0;
-char*  data="Message count:  \r\n";
-
+char*  data="Message count:   \r\n";
+//char*  data ="Message number: ";
 
 //end device B: mac address:0013A20040697379
 //gateway mac address:0013A2004069737A
@@ -12,10 +12,10 @@ char*  data="Message count:  \r\n";
 //char * DEST_MAC_ADDRESS = "0013A20040697377";
 
 //Destination (End Device B) MAC address
-char * DEST_MAC_ADDRESS = "0013A20040697379";
-
+//char * DEST_MAC_ADDRESS = "0013A20040697379";
+uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x79 }; 
 int  i = 0;
-
+int er = 0;
 
 void setup()
 {
@@ -27,6 +27,8 @@ void setup()
       if( COMM.setupXBee() ) 
           USB.println("ERROR SETTING UP XBEE MODULE");
       USB.println(freeMemory());
+      
+      COMM.discoverNodes();
 }
 
 void loop()
@@ -34,23 +36,38 @@ void loop()
       // Set params to send
       USB.println("End Device enters loop");
       char buf [100];
-      data[14] = *(itoa(i, buf, 10));
+      data[14] = *(itoa((i/10), buf, 10));
+      data[15] = *(itoa((i%10), buf, 10));
       
       COMM.printCurrentNetworkParams();
       
+      USB.print("\n");
+      USB.println(freeMemory());
       //for( uint8_t j=0; j<3; j++)
       //{
-        if( sendMessage(data, DEST_MAC_ADDRESS) )
-            USB.println("ERROR SENDING");  
+      
+      er = COMM.sendMessage(dest, data);
+      if(er != 0)
+      {
+           USB.print("\nERROR SENDING: "); 
+           USB.println(er);
+      }
+      //if( //sendMessage(data, DEST_MAC_ADDRESS) )
+      //      USB.println("ERROR SENDING\n");  
       //}    
       //waitingAnswer();
       
       i++;
-      delay(3000);
+      //delay(25000);
+      //delay(30000);
+      if(i%2==0)
+        delay(21000);
+      else
+        delay(45000);
 }
   
 
-
+/*
 bool sendMessage(const char * message, const char * destination)
 {
       bool error = false;
@@ -86,7 +103,7 @@ bool sendMessage(const char * message, const char * destination)
       paq_sent=NULL;
       return error;
 } 
-
+*/
 /*
 void waitingAnswer()
 {

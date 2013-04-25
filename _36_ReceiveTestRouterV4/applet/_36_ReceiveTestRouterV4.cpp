@@ -11,13 +11,15 @@ void loop();
 int er = 0;
 long previous = 0;
 bool first = true;
+uint8_t count = 0;
 
 //BJORN
-uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
-uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
+//uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
+uint8_t gateway[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
+//uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
 //ROEL
 //uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x74 };  //Gateway Roel address: 0013A20040697374
-//uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0A };
+uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0A };
 
 
 void setup()
@@ -52,7 +54,7 @@ void setup()
           USB.println(freeMemory());
       
           //if( COMM.setupXBee(panID, END_DEVICE, 0, HIBERNATE, "NodeD") )
-          if( COMM.setupXBee(panID, ROUTER, 0, NONE, "NodeD") ) 
+          if( COMM.setupXBee(panID, ROUTER, gateway, NONE, "NodeD") ) 
               USB.println("\nERROR SETTING UP XBEE MODULE\n");
                     
           // "year:month:date:nrDayOfWeek:hour:minute:second - day 1 = Sunday"
@@ -99,21 +101,23 @@ void loop()
          USB.println(er);
       }
       
-      er = PackUtils.sendMeasuredSensors(gateway, xbeeZB.activeSensorMask);
-      if( er!= 0)
+      if(count++ % 10 == 0)
       {
-           USB.print("ERROR PAQ.sendMeasuredSensors(uint16_t *) returns: ");
-           USB.println(er);
+        er = PackUtils.sendMeasuredSensors(xbeeZB.GATEWAY_MAC, xbeeZB.activeSensorMask);
+        if( er!= 0)
+        {
+             USB.print("ERROR PAQ.sendMeasuredSensors(uint16_t *) returns: ");
+             USB.println(er);
+        }
+        else USB.print("\nSend sensors OK\n");
       }
-      else USB.print("\nSend sensors OK\n");
-      
       //USB.println(freeMemory());  // = 1753 B
       
       USB.print("receive, free mem: ");
       USB.println(freeMemory());   // = 1103 B
 
-      if(first)
-      {
+      //if(first)
+      //{
           er = COMM.receiveMessages();
           if( er!= 0)
           {
@@ -121,7 +125,7 @@ void loop()
               USB.println(er);
           }
          first = false;
-      }
+      //}
       
       USB.print("\n");
       USB.println(freeMemory());  // = 1103 B

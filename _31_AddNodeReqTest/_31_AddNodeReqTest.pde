@@ -1,7 +1,7 @@
 packetXBee* paq_sent;
 int8_t state=0;
 long previous=0;
-char*  data="Message count:  \r\n";
+
 
 //BJORN
 uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
@@ -19,8 +19,8 @@ uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
 //int  i = 0;
 
 
-unsigned char ar1[2] = {0x00, 0x07}; //, 0};   //TEST ADD_NODE_REQ = OK
-//unsigned char ar2[3] = {0x00, 0x00, 0};    //TEST MASK_REQ = 
+unsigned char ar1[2] = {0x00, 0x07};         //TEST ADD_NODE_REQ = OK
+//unsigned char ar2[3] = {0x00, 0x00, 0};    //TEST MASK_REQ = ?
 
 
 void setup()
