@@ -26,7 +26,7 @@ void setup()
       // Suppose network parameters are OK!
 
       // wait until XBee module is associated
-      if(COMM.checkNodeAssociation()) USB.println("ERROR CHECKING NODE ASSOCIATION");      
+      if(COMM.checkNodeAssociation(SETUP)) USB.println("ERROR CHECKING NODE ASSOCIATION");      
 }
 
 
@@ -36,7 +36,7 @@ void loop()
       
       //measureSensors();
       
-      //SensUtils.measureSensors(2, TEMPERATURE, BATTERY);
+      SensUtils.measureSensors(2, TEMPERATURE, BATTERY);
       
             
       sendMessage("Test messagesssssssssssssssssssssssssssss");

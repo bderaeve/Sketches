@@ -150,6 +150,7 @@ void measureTemperature()
       for (int i=0;i<10;i++)
       {
           temperatures[i] = SensorGasv20.readValue(SENS_TEMPERATURE);
+          USB.println(temperatures[i]);  
           delay(100);
       }
       
@@ -223,7 +224,7 @@ bool sendMessage(const char * message)
       paq_sent->opt=0; 
       xbeeZB.hops=0;
       xbeeZB.setOriginParams(paq_sent, "5678", MY_TYPE);
-      xbeeZB.setDestinationParams(paq_sent, "0013A20040697374", message, MAC_TYPE,DATA_ABSOLUTE); //gateway mac address: 0013A2004069737A
+      xbeeZB.setDestinationParams(paq_sent, "0013A2004069737A", message, MAC_TYPE,DATA_ABSOLUTE); //gateway mac address: 0013A2004069737A
       xbeeZB.sendXBee(paq_sent);
       USB.print("start printing xbeeZB.error_TX:");
       USB.println(xbeeZB.error_TX);// print xbeeZB.error_TX

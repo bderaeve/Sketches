@@ -4,26 +4,31 @@ void loop();
 packetXBee* paq_sent;
 int8_t state=0;
 long previous=0;
-char*  data="Message count:  \r\n";
+
 
 //BJORN
-uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
+//uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
 uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x77 };     //Node D
 uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
 
 
 //ROEL
+uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };
 //uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x74 };  //Gateway Roel address: 0013A20040697374
 //uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xAB };
 
 
-//Destination (Router D) MAC address
-//char * DEST_MAC_ADDRESS = "0013A20040697377";
-//int  i = 0;
+//TEST ADD_NODE_REQ = OK
+  unsigned char ar1[2] = {0x00, 0x09};   // mask 9 = TEMPERATURE + BATTERY 
 
+//TEST MASK_REQ = OK  
+  // content = ""         
 
-unsigned char ar1[2] = {0x00, 0x07}; //, 0};   //TEST ADD_NODE_REQ = OK
-//unsigned char ar2[3] = {0x00, 0x00, 0};    //TEST MASK_REQ = 
+//TEST CH_NODE_FREQ_REQ = OK  
+  unsigned char ar2[2] = {0x00, 0x04};        
+ 
+//TEST CH_SENS_FREQ_REQ = 
+  unsigned char ar3[4] = {0x00, 0x01, 0x00, 0x04};
 
 
 void setup()
@@ -63,15 +68,17 @@ void loop()
        *            1 : error_TX = 1
        *            2 : error_TX = 2
        */
-       //COMM.escapeZeros( (char *) ar1, sizeof(ar1) );
-       
-       uint8_t size = 0;
-       size = sizeof(ar1)/sizeof(char);
-       USB.print("size = ");
-       USB.println( (int) size );
-       
-       //er = COMM.sendMessage(dest, ADD_NODE_REQ, (char *) ar1);
-       er = COMM.sendMessage(dest, ADD_NODE_REQ, COMM.escapeZeros( (char *) ar1, sizeof(ar1) ));
+       /// TEST ADD_NODE_REQUEST:
+         er = COMM.sendMessage(dest, ADD_NODE_REQ, COMM.escapeZeros( (char *) ar1, sizeof(ar1) ));
+         
+       /// TEST MASK_REQUEST: 
+         //er = COMM.sendMessage(dest, MASK_REQ, "");  
+
+       /// TEST CH_NODE_FREQ_REQUEST:
+         //er = COMM.sendMessage(dest, CH_NODE_FREQ_REQ, COMM.escapeZeros( (char *) ar2, sizeof(ar2) )); 
+ 
+       /// TEST CH_NODE_FREQ_REQUEST:
+          //er = COMM.sendMessage(dest, CH_SENS_FREQ_REQ, COMM.escapeZeros( (char *) ar3, sizeof(ar3) ));         
        if( er!= 0 )
        {
           USB.print("ERROR COMM.sendMessage() returns: ");

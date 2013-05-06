@@ -139,6 +139,7 @@ void measureTemperature()
       for (int i=0;i<10;i++)
       {
           temperatures[i] = SensorGasv20.readValue(SENS_TEMPERATURE);
+          USB.println(temperatures[i]);  
           delay(100);
       }
       
