@@ -44,11 +44,13 @@ void setup()
 void loop()
 {
       USB.println("\ndevice enters loop");
+      USB.println("before: ");
       USB.println(freeMemory());
       
-      xbeeZB.testMemory3();
+      //xbeeZB.testMemory3();
       
-      xbeeZB.testMemory();
+      
+      //xbeeZB.testMemory();
       xbeeZB.testMemory2();
       USB.println("after:");
       USB.println(freeMemory());

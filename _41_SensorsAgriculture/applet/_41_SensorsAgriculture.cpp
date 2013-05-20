@@ -102,7 +102,7 @@ void loop()
                                        break;
           }      
       
-      delay(2000);
+      delay(500);
 }
 
 
