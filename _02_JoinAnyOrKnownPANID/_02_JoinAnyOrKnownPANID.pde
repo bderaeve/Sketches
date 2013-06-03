@@ -1,18 +1,24 @@
-/*  With this program you can check if routers/end devices have successfully 
- *  joined a coordinator.
- *    If setPAN(0) they will join any available network
- *    If setPAN(panID) they will only try to join that network
- *  To limit the size of future programs this functionality has been added to the API in
- *  'commUtils.h'
- *  
- *  State = STABLE
- *    If errors try with other XBee. Normally a setPAN error means the XBee has crashed.
- *    Try to reset via X-CTU: restore button will not help but normally changeing the
- *    device type (Coord/Router/EndDev) will erase and write all parameters. Then just
- *    keep trying...
- */
- 
- 
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////// DESIGN OF A WIRELESS SENSOR NETWORKING TEST-BED /////////////////// 
+///////////////////  BY BJORN DERAEVE AND ROEL STORMS, 2012 - 2013  ///////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                   //
+//   TEST PROGRAM 02: JoinAnyOrKnownPANID                                            //
+//    With this program you can check if routers/end devices have successfully       //
+//    joined a coordinator.                                                          //
+//    If setPAN(0) they will join any available network                              //
+//    If setPAN(panID) they will only try to join that network                       //
+//    To limit the size of future programs this functionality has been added to the  //
+//    API in 'commUtils.h'                                                           //
+//                                                                                   //
+//   Result: STABLE                                                                  //
+//    If errors try with other XBee. Normally a setPAN error means the XBee has      //
+//    crashed. Try to reset via X-CTU: restore button will not help but normally     //
+//    changeing the device type (Coord/Router/EndDev) will erase and write all       //
+//    parameters. Then just keep trying...                                           //
+//                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////
+
 // PAN ID to set in order to search a coordinator 
 //uint8_t PANID[8]={ 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};   //To join any PAN ID
 uint8_t PANID[8]={ 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xAA}; 

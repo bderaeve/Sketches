@@ -4,6 +4,9 @@
  *    No sleep on this device!
  *    STATE:  If receiving device is a ROUTER:
  */
+ 
+ 
+// !!!! @PRECONDITION: PUT #define WEATHER_STATION in 'BjornClasses.h' in COMMENT !!!! 
 
 //BJORN
 //uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
@@ -42,7 +45,7 @@ void setup()
               USB.println("usb started\n");
               USB.println(freeMemory());
           
-              if( COMM.setupXBee(panID, ROUTER, gateway, NONE, "NodeD") ) 
+              if( COMM.setupXBee(panID, ROUTER, gateway, HIBERNATE, "NodeD") ) 
                   USB.println("\nERROR SETTING UP XBEE MODULE\n");
               USB.println(freeMemory());
 
@@ -113,7 +116,7 @@ void loop()
                    USB.print("ERROR PAQ.sendMeasuredSensors(uint16_t *) returns: ");
                    USB.println(er);
                    
-                   er = xbeeZB.retryJoining();
+                   er = COMM.retryJoining();
                    if( er == 0 )
                    {
                         er = PackUtils.sendMeasuredSensors(gateway, xbeeZB.activeSensorMask);
@@ -141,12 +144,21 @@ void loop()
       ///////////////////////////////////////////////////////////////////////////
       
           er = COMM.receiveMessages(END_DEVICE);
-          if( er!= 0)
+          switch(er)
           {
-              USB.print("ERROR COMM.receiveMessages() returns: ");
-              USB.println(er);
-          }
-      
+             case 0:  USB.print("\nMessage received and treated successfully\n");
+                      break;
+             case 1:  USB.print("\nNo messages received\n");
+                      break;
+             case 2:  USB.print("\nERROR: receiveMessages NOT EXECUTED\n");
+                      break;
+             case 3:  USB.print("\nReceived invalid packet type\n");
+                      break;
+             case 4:  USB.print("\nError while treating packet, sent to gateway\n");
+                      break;
+             default: USB.print("\nUNKNONW ERROR IN RECEIVE\n");
+                      break;
+          }     
 
       ///////////////////////////////////////////////////////////////////////////
       // 5. SLEEP / HIBERNATE

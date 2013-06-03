@@ -34,7 +34,8 @@ void setup()
        *	    1 : either XBee not present or no coordinator found, use #define ASSOCIATION_DEBUG
        *   \@post : defaultTime2Wake will be used until an ADD_NODE_REQ and an CH_NODE/SENS_FREQ_REQ is received
        */
-      if( COMM.setupXBee(panID, END_DEVICE, gateway, NONE, "WeatherStation") ) 
+      //if( COMM.setupXBee(panID, END_DEVICE, gateway, DEEPSLEEP, "WeatherStation") ) 
+      if( COMM.setupXBee(panID, ROUTER, gateway, NONE, "NodeD") ) 
           USB.println("\nERROR SETTING UP XBEE MODULE\n");
           
       //xbeeZB.setActiveSensorMask(4, BATTERY, VANE, ANEMO, PLUVIO);
@@ -107,7 +108,7 @@ void loop()
                    USB.print("ERROR PAQ.sendMeasuredSensors(uint16_t *) returns: ");
                    USB.println(er);
                    
-                   er = xbeeZB.retryJoining();
+                   er = COMM.retryJoining();
                    if( er == 0 )
                    {
                         er = PackUtils.sendMeasuredSensors(gateway, xbeeZB.activeSensorMask);
@@ -128,32 +129,35 @@ void loop()
                    USB.print("\nSensors sent successfully\n");
                    //check if there are older saved values that must be send 
               }
-          }
-
-
-      ///////////////////////////////////////////////////////////////////////////
-      // 4. CHECK FOR COMMANDS / IO_REQUESTS
-      ///////////////////////////////////////////////////////////////////////////
-      
-          er = COMM.receiveMessages(END_DEVICE);
-          if( er!= 0)
-          {
-              if(er == 1)
-              {
-                  USB.print("receiveMessages() returns: nothing received");
-              }
-              else
-              {
-                  USB.print("ERROR COMM.receiveMessages() returns: ");
-                  USB.println(er);
-              }
+              
+              
+            ///////////////////////////////////////////////////////////////////////////
+            // 4. CHECK FOR COMMANDS / IO_REQUESTS
+            ///////////////////////////////////////////////////////////////////////////
+            
+                er = COMM.receiveMessages(END_DEVICE);
+                if( er!= 0)
+                {
+                    if(er == 1)
+                    {
+                        USB.print("receiveMessages() returns: nothing received");
+                    }
+                    else
+                    {
+                        USB.print("ERROR COMM.receiveMessages() returns: ");
+                        USB.println(er);
+                    }
+                }              
+              
+              
           }
       
 
       ///////////////////////////////////////////////////////////////////////////
       // 5. SLEEP / HIBERNATE
       ///////////////////////////////////////////////////////////////////////////
- 
+          USB.println("\nStart enter low power mode");
+          USB.print(FM);   USB.println(freeMemory());
           PWRUt.enterLowPowerModeWeatherStation(XBEE_SLEEP_ENABLED);
 }
 
