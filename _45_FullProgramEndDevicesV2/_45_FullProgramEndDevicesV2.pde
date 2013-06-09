@@ -1,20 +1,30 @@
-/*
- *  Second version of the full program for Waspmote 'End Devices'.
- *  
- */
-// !!!! @PRECONDITION: PUT #define WEATHER_STATION in 'BjornClasses.h' in COMMENT !!!! 
-
-//BJORN
-//uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
-////uint8_t gateway[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
-uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////// DESIGN OF A WIRELESS SENSOR NETWORKING TEST-BED /////////////////// 
+///////////////////  BY BJORN DERAEVE AND ROEL STORMS, 2012 - 2013  ///////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                   //
+//   FINAL PROGRAM 45: FullProgramEndDevicesV2                                       //
+//      Program developed to run on 'End Devices', not allowing RTC alarms           //
+//      IN THIS EDITION OF THE CODE TO USE HIBERNATE IS IMPLEMENTED AND DEEPSLEEP    //
+//      CANNOT BE USED!                                                              //
+//      As a fix, a loop of the WDT using SLEEP has been implemented                 //
+//      @PRECONDITION: PUT #define WEATHER_STATION in 'BjornClasses.h' in COMMENT!   // 
+//      Result: STABLE                                                               //
+//                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////
 
 int er = 0;
 #define ret "\n ...RETURNED: "
+#define ok "OK\n"
 
-//ROEL
-//uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x74 };  //Gateway Roel address: 0013A20040697374
-//uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0A };
+//BJORN
+//uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
+//uint8_t gateway[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
+//uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
+
+//GROUP T
+//uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x74 };     //Gateway Roel address: 0013A20040697374
+uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0A };
 uint8_t gateway[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
 
 
@@ -61,7 +71,7 @@ void setup()
           
           ///////////////////////////////////////////////////////////////////////////////////////
           // FOR TESTING PURPOSES ONLY:  overrides the inNetwork boolean!
-          xbeeZB.setActiveSensorMask(3, TEMPERATURE, HUMIDITY, BATTERY);
+          //xbeeZB.setActiveSensorMask(3, TEMPERATURE, HUMIDITY, BATTERY);
           //er = xbeeZB.setActiveSensorMaskWithTimes(6, TEMPERATURE, 12, BATTERY, 30, CO2, 30);
           //USB.println(er);
           ///////////////////////////////////////////////////////////////////////////////////////      
@@ -71,19 +81,16 @@ void setup()
 
 void loop()
 {
+    USB.print(FM);   USB.println(freeMemory());  
     ///////////////////////////////////////////////////////////////////////////
     // 1. MEASURE THE SAMPLES FOUND IN THE NODES ACTIVE SENSOR MASK
     /////////////////////////////////////////////////////////////////////////// 
-    er = SensUtils.measureSensors(xbeeZB.activeSensorMask);     USB.print(ret);
-    switch(er)
-    {
-       case 0:  USB.print("OK\n");
-                break;
-       case 1:  USB.print("MASK_EMPTY\n");
-                break;
-       case 2:  USB.print("NOT_EXECUTED\n");
-                break;
-    }              
+    /* \return: 1 : Measured successfully
+     *          2 : MASK_EMPTY
+     *          3 : NOT_EXECUTED
+     */
+    er = SensUtils.measureSensors(xbeeZB.activeSensorMask);     USB.print(ret); 
+                                                                USB.print(er);               
     
     ///////////////////////////////////////////////////////////////////////////
     // 2A. POWER SAVER MODE
@@ -111,9 +118,9 @@ void loop()
             
          /* checkNodeAssociation(LOOP): @see: 'commUtils.h'
           *
-          * \return:   0 : joined successfully
-          *            1 : no XBee present on Waspmote
-          *            2 : coordinator not found
+          * \return:   0 : OK
+          *            1 : NO_PARENT_FOUND
+          *            2 : XBEE_NOT_DETECTED_ON_WASPMOTE
           *
           * \note: after reduced setup (hibernate) the resulting association state 
           *   might be incorrect. However, reduced setup saves about 8 minutes so 
@@ -124,12 +131,12 @@ void loop()
           er = COMM.checkNodeAssociation(LOOP);   USB.print(ret);
           switch(er)
           {
-             case 0:  USB.print("OK\n");
+             case 0:  USB.print(ok);
                       break;
-             case 1:  USB.print("NO_PARENT_FOUND\n");
+             case 1:  USB.print(1);
                       SensUtils.storeMeasuredSensorValues(xbeeZB.activeSensorMask); 
                       break;
-             case 2:  USB.print("XBEE_NOT_DETECTED_ON_WASPMOTE\n");
+             case 2:  USB.print(2);
                       SensUtils.storeMeasuredSensorValues(xbeeZB.activeSensorMask); 
                       break;
           }
@@ -152,20 +159,13 @@ void loop()
           ///////////////////////////////////////////////////////////////////////////////
           if( er == 0 ) // NO ASSOCIATION ERROR
           {
-              USB.print("\n\nSENDING: ");
+              /* \Returns: 0 : SENT SUCCESSFULLY
+               *           1 : NOT_SENT_DUE_TO_SLEEP
+               *           2 : NOT_SENT_OR_MESSAGE_LOST 
+               *           3 : NOT_EXECUTED_MASK_EMPTY
+               */
               er = PackUtils.sendMeasuredSensors(gateway, xbeeZB.activeSensorMask);
-              USB.print(ret);
-              switch(er)
-              {
-                 case 0:  USB.print("OK\n");
-                          break;
-                 case 1:  USB.print("NOT_SENT_DUE_TO_SLEEP\n");
-                          break;
-                 case 2:  USB.print("NOT_SENT_OR_MESSAGE_LOST\n");
-                          break;
-                 case 3:  USB.print("NOT_EXECUTED_MASK_EMPTY_?");
-                          break;
-              }
+              USB.print(ret); USB.print(er);
  
  
               if( er!= 0)
@@ -177,14 +177,14 @@ void loop()
                         if( er!= 0)
                         {
                             xbeeZB.storeError(NODE_FAILED_TO_SEND_THE_MEASURED_SENSORS_AFTER_A_SUCCESSFULL_RETRY_JOINING);
-                            SensUtils.storeMeasuredSensorValues(xbeeZB.activeSensorMask); 
+                            //SensUtils.storeMeasuredSensorValues(xbeeZB.activeSensorMask); 
                             USB.print("\n\nFATAL ERROR\n\n"); 
                         }                              
                    }
                    else
                    {
                         xbeeZB.inNetwork = false;
-                        SensUtils.storeMeasuredSensorValues(xbeeZB.activeSensorMask); 
+                        //SensUtils.storeMeasuredSensorValues(xbeeZB.activeSensorMask); 
                    }
               }                 
              
@@ -193,29 +193,22 @@ void loop()
               ///////////////////////////////////////////////////////////////////////////                    
               if(er == 0) // IF NO SEND ERROR <=> ASSOCIATION STATE WAS CORRECT... 
               {
-                   er = COMM.receiveMessages(END_DEVICE);  USB.print(ret);
-                   switch(er)
-                   {
-                       case 0:  USB.print("MESSAGE_RECEIVED_AND_TREATED_SUCCESSFULLY\n");
-                                break;
-                       case 1:  USB.print("NOTHING_RECEIVED\n");
-                                break;
-                       case 2:  USB.print("NOT_EXECUTED\n");
-                                break;
-                       case 3:  USB.print("GOT_INVALID_PACKET_TYPE\n");
-                                break;
-                       case 4:  USB.print("ERROR_WHILE_TREATING_PACKET_,_SENT_TO_GATEWAY\n");
-                                break;
-                       default: USB.print("UNKNONW_ERROR_\n");
-                                break;
-                   }
+                   /* Returns: 0 : MESSAGE_RECEIVED_AND_TREATED_SUCCESSFULLY
+                    *          1 : NOTHING_RECEIVED
+                    *          2 : NOT_EXECUTED
+                    *          3 : GOT_INVALID_PACKET_TYPE
+                    *          4 : ERROR_WHILE_TREATING_PACKET_,_SENT_TO_GATEWAY
+                    *          ? : UNKNOWN
+                    */
+                   er = COMM.receiveMessages(END_DEVICE);  USB.print(ret);  USB.print(er);
                  
                    ///////////////////////////////////////////////////////////////////////////
                    // 2B.4 ...CHECK IF THERE ARE SAVED SAMPLES THAT MUST BE SEND
                    ///////////////////////////////////////////////////////////////////////////   
                    if(xbeeZB.mustSendSavedSensorValues)
                    {
-                        er = PackUtils.sendStoredSensors(gateway);
+                        //er = PackUtils.sendStoredSensors(gateway);
+                        er = PackUtils.sendStoredErrors(gateway);          USB.println(er);
                         xbeeZB.mustSendSavedSensorValues = false;
                    }         
               }// close ... IF NO SEND ERROR <=> ASSOCIATION STATE WAS CORRECT...

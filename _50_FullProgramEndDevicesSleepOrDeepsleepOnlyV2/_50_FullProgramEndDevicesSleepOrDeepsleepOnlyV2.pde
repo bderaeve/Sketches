@@ -4,7 +4,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                   //
 //   FINAL PROGRAM 50: FullProgramEndDevicesSleepOrDeepsleepOnlyV2                   //
-//      Program developed to run on 'End Devices', allowing RTC alarms               //
+//      Program developed to run on 'End Devices', allowing RTC alarms, facilitating //
+//      the interruptions of CO2 measurements.                                       //
 //      IN THIS EDITION OF THE CODE TO USE HIBERNATE IS NOT IMPLEMENTED!             //
 //      @PRECONDITION: PUT #define WEATHER_STATION in 'BjornClasses.h' in COMMENT!   // 
 //      Result: STABLE                                                               //
@@ -22,7 +23,7 @@ long previous = 0;
 ////uint8_t gateway[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
 //uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
 
-//ROEL
+//GROUP T
 //uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x74 };  //Gateway Roel address: 0013A20040697374
 uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0A };
 uint8_t gateway[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };

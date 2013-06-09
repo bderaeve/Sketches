@@ -1,21 +1,29 @@
-/*
- *  Test program for checking the receiving of messages (minimum time2wait)
- *  Use Sketch 29 to send a simple test message.
- *    No sleep on this device!
- *    STATE:  If receiving device is a ROUTER:
- */
-
-//BJORN
-//uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
-////uint8_t gateway[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
-//uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////// DESIGN OF A WIRELESS SENSOR NETWORKING TEST-BED /////////////////// 
+///////////////////  BY BJORN DERAEVE AND ROEL STORMS, 2012 - 2013  ///////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                   //
+//   FINAL PROGRAM 49: FullProgramWeatherStationV2                                   //
+//      Program developed to run on 'End Devices', not allowing RTC alarms           //
+//      SINCE THE WEATHER STATION HAS A SOLAR PANEL FOR ENERGY HARVESTING THIS       //
+//      PROGRAM DOES NOT IMPLEMENT HIBERNATE. BY USING DEEPSLEEP, XBEE_SLEEP AND     //
+//      RTC ALARMS CAN BE USED EASILY.                                               //
+//      @PRECONDITION: PUT #define WEATHER_STATION in 'BjornClasses.h' out COMMENT!  // 
+//      Result: STABLE                                                               //
+//                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////
 
 int er = 0;
 long previous = 0;
 #define ret "\n ...RETURNED: "
 #define ok "OK\n"
 
-//ROEL
+//BJORN
+//uint8_t gateway[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x7A };  //Coordinator Bjorn address: 0013A2004069737A
+////uint8_t gateway[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
+//uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B };
+
+//GROUP T
 //uint8_t dest[8] = { 0x00,0x13,0xA2,0x00,0x40,0x69,0x73,0x74 };  //Gateway Roel address: 0013A20040697374
 uint8_t panID[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0A };
 uint8_t gateway[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };

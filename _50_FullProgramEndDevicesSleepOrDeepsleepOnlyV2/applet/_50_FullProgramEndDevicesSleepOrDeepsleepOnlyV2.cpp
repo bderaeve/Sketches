@@ -63,7 +63,7 @@ void setup()
       // FOR TESTING PURPOSES ONLY:  Overrides the inNetwork boolean!
       //xbeeZB.setActiveSensorMask(4, TEMPERATURE, HUMIDITY, BATTERY, CO2);
       //xbeeZB.setActiveSensorMaskWithTimes(8, TEMPERATURE, 6, HUMIDITY, 6, BATTERY, 6, CO2, 12);
-      xbeeZB.setActiveSensorMaskWithTimes(8, TEMPERATURE, 6, HUMIDITY, 18, BATTERY, 24, CO2, 360);
+      //xbeeZB.setActiveSensorMaskWithTimes(8, TEMPERATURE, 6, HUMIDITY, 18, BATTERY, 24, CO2, 360);
       //er = xbeeZB.setActiveSensorMaskWithTimes(6, TEMPERATURE, 12, BATTERY, 30, CO2, 30);
       //USB.println(er);
       ///////////////////////////////////////////////////////////////////////////////////////      
